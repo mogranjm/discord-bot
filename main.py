@@ -1,35 +1,49 @@
-import os
+# Dependency imports
+# from dotenv import load_dotenv)
 import discord
-import random
-from dotenv import load_dotenv
-from datetime import datetime
-from discord.ext import commands
-import winsound
-from selenium import webdriver
-from time import sleep
-import random
+import playsound
+# import winsound
 import bs4
+from environs import Env
+# from discord.ext import commands
+from discord.ext.commands import Bot
+from gtts import gTTS
+from selenium import webdriver
+
+# Python standard imports
+from time import sleep
+from datetime import datetime
 import requests
 import math
-from discord.ext.commands import Bot
-import playsound
-from gtts import gTTS
+import os
+import random
 
-bot = Bot("!")
+# Get Environment variables
+# NEW
+env = Env()
+env.read_env('env.txt')
+TOKEN = env('DISCORD_TOKEN')
+USER = env('USER')
+CODE_CHANNEL = env("CODE_CHANNEL")
+INSTAGRAM_USERNAME = env("INSTAGRAM_USERNAME")
+INSTAGRAM_PASSWORD = env("INSTAGRAM_PASSWORD")
+# DEPRECATED
+# load_dotenv("text.txt")
+# TOKEN = os.getenv('DISCORD_TOKEN')
+# USER = os.getenv('USER')
+# CODE_CHANNEL = os.getenv("CODE_CHANNEL")
 
+# Selenium driver
 useChrome = False
 if useChrome is True:
     chromedriver_path = 'chromedriver'
     webdriver = webdriver.Chrome(executable_path=chromedriver_path)
 
+# Discord setup
+bot = Bot("!")
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
-
-load_dotenv("text.txt")
-TOKEN = os.getenv('DISCORD_TOKEN')
-USER = os.getenv('USER')
-CODE_CHANNEL = os.getenv("CODE_CHANNEL")
 
 
 @client.event
