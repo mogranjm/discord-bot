@@ -33,11 +33,12 @@ INSTAGRAM_PASSWORD = env("INSTAGRAM_PASSWORD")
 # USER = os.getenv('USER')
 # CODE_CHANNEL = os.getenv("CODE_CHANNEL")
 
-# Selenium driver
-useChrome = False
-if useChrome is True:
-    chromedriver_path = 'chromedriver'
-    webdriver = webdriver.Chrome(executable_path=chromedriver_path)
+# Selenium setup
+# DEPRECATED
+# useChrome = False
+# if useChrome is True:
+#     chromedriver_path = 'chromedriver'
+    # webdriver = webdriver.Chrome(executable_path=chromedriver_path)
 
 # Discord setup
 bot = Bot("!")
