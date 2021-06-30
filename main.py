@@ -41,6 +41,7 @@ if useChrome is True:
 
 # Discord setup
 bot = Bot("!")
+
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
