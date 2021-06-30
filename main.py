@@ -13,11 +13,15 @@ from selenium import webdriver
 # Python standard imports
 from time import sleep
 from datetime import datetime
+from pathlib import Path
 import requests
 import math
 import os
 import random
 
+BASE_DIR = Path(__file__).resolve()
+POLLS_DIR = BASE_DIR / "polls"
+SLEEP_DIR = BASE_DIR/ "sleep"
 # Get Environment variables
 # NEW
 env = Env()
@@ -52,13 +56,17 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
 
-    file = open("cloud.txt", "r")
-    cloud = file.read().splitlines()
-    file.close()
+    # file = open("cloud.txt", "r")
+    # cloud = file.read().splitlines()
+    # file.close()
+	with open ("cloud.txt", "r") as file:
+	    cloud = file.read().splitlines()
 
-    file = open("cloud id.txt", "r")
-    cloudID = file.read().splitlines()
-    file.close()
+    # file = open("cloud id.txt", "r")
+    # cloudID = file.read().splitlines()
+    # file.close()
+	with open("cloud_id.txt", "r") as file:
+		could_id = file.read().splitlines()
 
     count = 0
     files = next(os.walk("cloud"))[2]
@@ -72,15 +80,21 @@ async def on_ready():
                 item = await channel.send(file=discord.File(sent))
                 item = str(item.id)
 
-                file = open("cloud id.txt", "a")
-                file.write(item)
-                file.write("\n")
-                file.close()
+                # file = open("cloud id.txt", "a")
+				# file.write(item)
+                # file.write("\n")
+                # file.close()
+				with open("cloud_id.txt", "a") as f:
+                	f.write(item)
+                	f.write("\n")
 
-                file = open("cloud.txt", "a")
-                file.write(files[count])
-                file.write("\n")
-                file.close()
+                # file = open("cloud.txt", "a")
+                # file.write(files[count])
+                # file.write("\n")
+                # file.close()
+				with open("cloud.txt", "a") as f:
+                	f.write(item)
+                	f.write("\n")
                 count = count + 1
 
             else:
@@ -99,19 +113,25 @@ async def on_ready():
                 gone = cloud.pop(count)
                 goneID = cloudID.pop(count)
 
-                file = open("cloud.txt", "w")
-                for line in cloud:
-                    if line != gone:
-                        file.write(line)
-                        file.write("\n")
-                file.close()
+                # file = open("cloud.txt", "w")
+				with open("cloud.txt", "w") as f:
+					for line in cloud:
+						if line != gone:
+							# file.write(line)
+							# file.write("\n")
+							f.write(line)
+							f.write("\n")
+                # file.close()
 
-                file = open("cloud id.txt", "w")
-                for line in cloudID:
-                    if line != goneID:
-                        file.write(line)
-                        file.write("\n")
-                file.close()
+                # file = open("cloud id.txt", "w")
+				with open("cloud id.txt", "w") as f:
+					for line in cloudID:
+						if line != goneID:
+							# file.write(line)
+							# file.write("\n")
+							f.write(line)
+							f.write("\n")
+                # file.close()
 
         else:
             break
@@ -168,14 +188,16 @@ async def on_message(message):
                         await channel.send(f'last recorded region: {region}')
 
     if message.content in europe:
-        file = open("lastRegion.txt", "w")
-        file.write("EU")
-        file.close()
+        # file = open("lastRegion.txt", "w")
+		with open("lastRegion.txt", "w") as file:
+        	file.write("EU")
+        # file.close()
 
     elif message.content in america:
-        file = open("lastRegion.txt", "w")
-        file.write("NA")
-        file.close()
+        # file = open("lastRegion.txt", "w")
+		with open("lastRegion.txt", "w") as file:
+        	file.write("NA")
+        # file.close()
 
     message.content = message.content.lower()
 
@@ -248,9 +270,10 @@ async def on_message(message):
     elif "bot turn off" in message.content:
         if on is True:
             if message.author.id == 484893096761622554:
-                TorF = open("torf.txt", "w+")
-                TorF.write("False")
-                TorF.close()
+				# TorF = open("torf.txt", "w+")
+				with open("torf.txt", "w+") as TorF:
+                	TorF.write("False")
+                # TorF.close()
 
                 await message.channel.send("goodbye!")
             else:
@@ -262,9 +285,10 @@ async def on_message(message):
     elif "bot turn on" in message.content:
         if on is False:
             if message.author.id == 484893096761622554:
-                TorF = open("torf.txt", "w+")
-                TorF.write("True")
-                TorF.close()
+                # TorF = open("torf.txt", "w+")
+				with open("torf.txt", "w+") as TorF:
+                	TorF.write("True")
+                # TorF.close()
 
                 await message.channel.send("hello!")
             else:
@@ -274,15 +298,17 @@ async def on_message(message):
             await message.channel.send("im already on")
 
     elif "bot create poll" in message.content and on is True:
-        currentPole = open("poll files/current_pole.txt", "r")
-        torf = currentPole.read()
-        currentPole.close()
+        # currentPole = open("poll files/current_pole.txt", "r")
+		with open(POLLS_DIR / "current_poll.txt", "r") as current_poll:
+        	torf = current_poll.read()
+        # currentPole.close()
         if torf is True:
             await message.channel.send("there is already an active poll!")
         elif torf is False:
-            currentPole = open("poll files/current_pole.txt", "w+")
-            currentPole.write("True")
-            currentPole.close()
+            # currentPole = open("poll files/current_pole.txt", "w+")
+			with open(POLLS_DIR / "current_poll.txt", "w+") as current_poll:
+            	current_poll.write("True")
+            # currentPole.close()
             pollList = []
             message.content = message.content.replace("bot create poll ", "")
             count = 0
@@ -306,10 +332,11 @@ async def on_message(message):
                 if count < len(pollList):
                     num = str(count + 1)
                     add2list = pollList[count].replace(",", "")
-                    file = open("poll files/poll.txt", "a")
-                    file.write(add2list)
-                    file.write("\n")
-                    file.close()
+                    # file = open("poll files/poll.txt", "a")
+					with open(POLLS_DIR / "poll.txt", "a") as file:
+                    	file.write(add2list)
+                    	file.write("\n")
+                    # file.close()
 
                     pollList[count] = pollList[count].replace(
                         ",", "type " + num + " for ")
@@ -319,17 +346,19 @@ async def on_message(message):
                     break
 
     elif "bot poll vote" in message.content and on is True:
-        currentPole = open("poll files/current_pole.txt", "r")
-        torf = currentPole.read()
-        currentPole.close()
+        # currentPole = open("poll files/current_pole.txt", "r")
+		with open(POLLS_DIR / "current_poll.txt", "r") as current_poll:
+        	torf = current_poll.read()
+        # currentPole.close()
 
         if torf is False:
             await message.channel.send("there is no poll currently open!")
         elif torf is True:
 
-            alreadyVoted = open("poll files/already voted.txt")
-            voter = alreadyVoted.read().splitlines()
-            alreadyVoted.close()
+            # alreadyVoted = open("poll files/already voted.txt")
+			with open(POLLS_DIR/ "voted.txt")
+            	voter = alreadyVoted.read().splitlines()
+            # alreadyVoted.close()
 
             message.author = str(message.author)
             author = message.author.split("#")[0]
@@ -340,9 +369,10 @@ async def on_message(message):
                 message.content = message.content.replace("bot poll vote ", "")
                 message.content = int(message.content)
 
-                options = open("poll files/poll.txt", "r")
-                get = options.read().splitlines()
-                options.close()
+                # options = open("poll files/poll.txt", "r")
+				with open(POLLS_DIR / "poll.txt", "r") as options:
+                	get = options.read().splitlines()
+                # options.close()
 
                 if message.content > len(get) + 1:
                     await message.channel.send(
@@ -355,38 +385,44 @@ async def on_message(message):
                 else:
                     await message.channel.send(
                         f'{author} voted for {get[message.content-1]}!')
-                    file = open("poll files/already voted.txt", "a")
-                    file.write(author)
-                    file.write("\n")
-                    file.close()
+                    # file = open("poll files/already voted.txt", "a")
+					with open(POLLS_DIR / "voted.txt", "a") as file:
+                    	file.write(author)
+                   		file.write("\n")
+                    # file.close()
 
-                    file = open("poll files/votes.txt", "a")
-                    file.write(str(message.content))
-                    file.write("\n")
-                    file.close()
+                    # file = open("poll files/votes.txt", "a")
+					with open(POLLS_DIR / "votes.txt", "a") as file:
+                    	file.write(str(message.content))
+                    	file.write("\n")
+                    # file.close()
 
     elif "bot close poll" in message.content:
-        file = open("poll files/current_pole.txt", "r")
-        openPole = file.read()
-        file.close()
+        # file = open("poll files/current_pole.txt", "r")
+		with open(POLLS_DIR / "current_poll.txt", "r") as file:
+        	open_poll = bool(file.read())
+        # file.close()
 
-        if openPole == "False":
+        if open_poll is False:
             await message.channel.send(
                 "ERROR: there is no poll currently open!")
         else:
 
-            collect = open("poll files/votes.txt")
-            vote = collect.read().splitlines()
-            collect.close()
+            # collect = open("poll files/votes.txt")
+			with open(POLLS_DIR / "votes.txt") as collect:
+            	votes = collect.read().splitlines()
+            # collect.close()
 
-            if len(vote) == 0:
-                await message.channel.send("No votes yet, nothing has won")
+            # if len(votes) == 0:
+            #     await message.channel.send("No votes yet, nothing has won")
 
-            else:
-                options = open("poll files/poll.txt", "r")
-                choice = options.read().splitlines()
-                length = len(choice)
-                options.close()
+            # else:
+			if len(votes) >= 1:
+                # options = open("poll files/poll.txt", "r")
+				with open(POLLS_DIR / "poll.txt", "r") as options:
+                	choice = options.read().splitlines()
+                	length = len(choice)
+                # options.close()
 
                 def most_frequent(vote):
                     return max(set(vote), key=vote.count)
@@ -408,25 +444,34 @@ async def on_message(message):
                 await message.channel.send(
                     f'{choice[winner-1]} won the poll with {howmany} votes!')
 
-            file = open("poll files/current_pole.txt", "w")
-            file.write("False")
-            file.close()
+            # file = open("poll files/current_pole.txt", "w")
+			# with open(POLLS_DIR / "current_poll.txt", "w") as file:
+            # 	file.write("False")
+            # # file.close()
 
-            file = open("poll files/poll.txt", "w")
-            file.write("")
-            file.close()
+            # # file = open("poll files/poll.txt", "w")
+			# with open(POLLS_DIR / "poll.txt", "w") as file:
+            # 	file.write("")
+            # # file.close()
 
-            file = open("poll files/already voted.txt", "w")
-            file.write("")
-            file.close()
+            # with open(POLLS_DIR / "voted.txt", "w") as file:
+            # 	file.write("")
+            # # file.close()
 
-            file = open("poll files/votes.txt", "w")
-            file.write("")
-            file.close()
+            # with open(POLLS_DIR / "votes.txt", "w") as file:
+            # 	file.write("")
+            # file.close()
+			for file in os.listdir(POLLS_DIR):
+				with open(file, "w") as f:
+					f.write("")
+
+			with open(POLLS_DIR / "current_poll.txt", "w") as file:
+            	file.write("False")
 
     elif "bot offend" in message.content:
-        file = open("offend.txt", "r")
-        mean = file.read().splitlines()
+        # file = open("offend.txt", "r")
+		with open ("offend.txt", "r") as file:
+        	mean = file.read().splitlines()
         offend = random.choice(mean)
         await message.channel.send(offend)
 
@@ -456,14 +501,16 @@ async def on_message(message):
         minute = now.strftime("%M")
         hour = now.strftime("%H")
 
-        file = open("sleep list/" + author, "a+")
-        file.write(hour + ":" + minute)
-        file.write("\n")
-        file.close()
+        # file = open("sleep list/" + author, "a+")
+		with open(SLEEP_DIR / author, "a+") as file:
+        	file.write(hour + ":" + minute)
+        	file.write("\n")
+        # file.close()
 
-        file = open("sleep list/" + author, "r")
-        schedule = file.read().splitlines()
-        file.close()
+        # file = open("sleep list/" + author, "r")
+		with open(SLEEP_DIR / author, "r") as file:
+        	schedule = file.read().splitlines()
+        # file.close()
         count = 0
         hour = 0
         minute = 0
