@@ -18,7 +18,7 @@ from gtts import gTTS
 bot = Bot("!")
 
 useChrome = False
-if useChrome == True:
+if useChrome is True:
     chromedriver_path = 'chromedriver'
     webdriver = webdriver.Chrome(executable_path=chromedriver_path)
 
@@ -49,7 +49,7 @@ async def on_ready():
     channel = client.get_channel(857310481261133864)
 
     loop = bool(True)
-    while loop == True:
+    while loop is True:
         if count < len(files):
             if files[count] not in cloud:
                 sent = f'cloud/{files[count]}'
@@ -74,7 +74,7 @@ async def on_ready():
             break
     count = 0
     loop = bool(True)
-    while loop == True:
+    while loop is True:
         if count < len(cloud):
             if cloud[count] not in files:
                 remove = await channel.fetch_message(cloudID[count])
@@ -134,7 +134,7 @@ async def on_message(message):
         if message.content == message.content.upper():
 
             bet = message.content.isalpha()
-            if bet == True:
+            if bet is True:
 
                 channel = client.get_channel(
                     833891322029015060)  #CODE_CHANNEL)
@@ -171,13 +171,13 @@ async def on_message(message):
         await message.channel.send(
             f'Hey {author} dont forget to record your sleeping times!')
 
-    if "bot functions" in message.content and on == "True":
+    if "bot functions" in message.content and on is True:
         response = (
             'i am capable of:\nbot functions by typing: "BOT functions"random number generator by typing: "BOT rng"\ngetting the time for people in other time zones by typing "BOT current times"\ncreating polls by typing "bot create poll"+a list of the options\nvoting in a poll by typing "bot poll vote"+the number of the option you want to choose\nclosing a poll by typing "bot close poll"\ngetting your average sleep schedule by typing "bot sleep"\nsay something mean by typing "bot offend"\nautomatically send suspected among us codes to codes chat\nrecords last suspected among us region\n\ndeveloper only features:\nturning me on and off'
         )
         await message.channel.send(response)
 
-    elif "bot rng" in message.content and on == "True":
+    elif "bot rng" in message.content and on is True:
         message.content = message.content.replace("bot rng", "")
         if len(message.content) == 0 or message.content[0] == " " and len(
                 message.content) < 2:
@@ -198,7 +198,7 @@ async def on_message(message):
                 rng = 'ERROR: incorrect formatting. example: "bot rng 25,75"'
             await message.channel.send(rng)
 
-    elif "bot current times" in message.content and on == "True":
+    elif "bot current times" in message.content and on is True:
         now = datetime.now()
         minute = now.strftime("%M")
         england = now.strftime("%H")
@@ -230,7 +230,7 @@ async def on_message(message):
         await message.channel.send(response)
 
     elif "bot turn off" in message.content:
-        if on == "True":
+        if on is True:
             if message.author.id == 484893096761622554:
                 TorF = open("torf.txt", "w+")
                 TorF.write("False")
@@ -244,7 +244,7 @@ async def on_message(message):
             await message.channel.send("im already off")
 
     elif "bot turn on" in message.content:
-        if on == "False":
+        if on is False:
             if message.author.id == 484893096761622554:
                 TorF = open("torf.txt", "w+")
                 TorF.write("True")
@@ -257,13 +257,13 @@ async def on_message(message):
         else:
             await message.channel.send("im already on")
 
-    elif "bot create poll" in message.content and on == "True":
+    elif "bot create poll" in message.content and on is True:
         currentPole = open("poll files/current_pole.txt", "r")
         torf = currentPole.read()
         currentPole.close()
-        if torf == "True":
+        if torf is True:
             await message.channel.send("there is already an active poll!")
-        elif torf == "False":
+        elif torf is False:
             currentPole = open("poll files/current_pole.txt", "w+")
             currentPole.write("True")
             currentPole.close()
@@ -272,7 +272,7 @@ async def on_message(message):
             count = 0
             lastCount = 0
             loop = bool(True)
-            while loop == True:
+            while loop is True:
                 if count == len(message.content):
                     pollList.append(message.content[lastCount:count])
                     break
@@ -286,7 +286,7 @@ async def on_message(message):
             count = 0
             pollList[0] = "," + pollList[0]
             loop = bool(True)
-            while loop == True:
+            while loop is True:
                 if count < len(pollList):
                     num = str(count + 1)
                     add2list = pollList[count].replace(",", "")
@@ -302,14 +302,14 @@ async def on_message(message):
                 else:
                     break
 
-    elif "bot poll vote" in message.content and on == "True":
+    elif "bot poll vote" in message.content and on is True:
         currentPole = open("poll files/current_pole.txt", "r")
         torf = currentPole.read()
         currentPole.close()
 
-        if torf == "False":
+        if torf is False:
             await message.channel.send("there is no poll currently open!")
-        elif torf == "True":
+        elif torf is True:
 
             alreadyVoted = open("poll files/already voted.txt")
             voter = alreadyVoted.read().splitlines()
@@ -380,7 +380,7 @@ async def on_message(message):
 
                 num = 0
                 loop = bool(True)
-                while loop == True:
+                while loop is True:
                     if num == len(vote):
                         break
                     else:
@@ -452,7 +452,7 @@ async def on_message(message):
         hour = 0
         minute = 0
         loop = bool(True)
-        while loop == True:
+        while loop is True:
             if count == len(schedule):
                 break
             else:
@@ -496,7 +496,7 @@ async def on_message(message):
                     '//*[@id="thumbnail"]')
                 torf = True
                 for elem in elems:
-                    if torf == True:
+                    if torf is True:
                         link = elem.get_attribute("href")
                         webdriver.get(link)
                         torf = False
@@ -508,7 +508,7 @@ async def on_message(message):
                     count = 0
                     count2 = 0
                     loop = bool(True)
-                    while loop == True:
+                    while loop is True:
 
                         if message.content[count] == ",":
                             break
