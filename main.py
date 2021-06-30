@@ -56,85 +56,94 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
 
+# CODESTYLE: Use with blocks rather than file.open, file.do, file.close
     # file = open("cloud.txt", "r")
     # cloud = file.read().splitlines()
     # file.close()
-	with open ("cloud.txt", "r") as file:
-	    cloud = file.read().splitlines()
+	with open("cloud.txt", "r") as file:
+	    cloud_data = file.read().splitlines()
 
     # file = open("cloud id.txt", "r")
     # cloudID = file.read().splitlines()
     # file.close()
 	with open("cloud_id.txt", "r") as file:
-		could_id = file.read().splitlines()
+		could_id_data = file.read().splitlines()
 
-    count = 0
     files = next(os.walk("cloud"))[2]
     channel = client.get_channel(857310481261133864)
 
-    loop = bool(True)
-    while loop is True:
-        if count < len(files):
-            if files[count] not in cloud:
-                sent = f'cloud/{files[count]}'
-                item = await channel.send(file=discord.File(sent))
-                item = str(item.id)
+    # count = 0
+	# loop=bool(True)    # CODESTYLE: this is the same as loop = True
+	# while loop ==True: # CODESTYLE: no need to define loop, you can just say "while True:"
+	# CODESTYLE: Use for-loop rather than while-loop with counter variable
+	for file in files:
+        # if count < len(files):
+		# if files[count] not in cloud:
+		if file not in cloud_data:
+			sent = f'cloud/{file}'
+			item = await channel.send(file=discord.File(sent))
+			item = str(item.id)
 
-                # file = open("cloud id.txt", "a")
-				# file.write(item)
-                # file.write("\n")
-                # file.close()
-				with open("cloud_id.txt", "a") as f:
-                	f.write(item)
-                	f.write("\n")
+# CODESTYLE: rather than opening and closing the file n times over the loop,
+#              it would be more efficient to append the new data to a list 
+#              and write from the list after the loop.
+			# file = open("cloud id.txt", "a")
+			# file.write(item)
+			# file.write("\n")
+			# file.close()
+			with open("cloud_id.txt", "a") as f:
+				f.write(item)
+				f.write("\n")
 
-                # file = open("cloud.txt", "a")
-                # file.write(files[count])
-                # file.write("\n")
-                # file.close()
-				with open("cloud.txt", "a") as f:
-                	f.write(item)
-                	f.write("\n")
-                count = count + 1
+			# file = open("cloud.txt", "a")
+			# file.write(files[count])
+			# file.write("\n")
+			# file.close()
+			with open("cloud.txt", "a") as f:
+				f.write(item)
+				f.write("\n")
+                # count = count + 1
 
-            else:
-                count = count + 1
+            # else:
+            #     count = count + 1
 
-        else:
-            break
-    count = 0
-    loop = bool(True)
-    while loop is True:
-        if count < len(cloud):
-            if cloud[count] not in files:
-                remove = await channel.fetch_message(cloudID[count])
-                await remove.delete()
+        # else:
+        #     break
+    # count = 0
+    # loop = bool(True)
+    # while loop is True:
+	# CODESTYLE: Use for-loop with enumerate instead of while-loop + manual counter
+	for count, line in enumerate(cloud_data):
+        # if count < len(cloud):
+		# if cloud[count] not in files:
+		if line not in files: 
+			remove = await channel.fetch_message(cloud_id_data[count])
+			await remove.delete()
 
-                gone = cloud.pop(count)
-                goneID = cloudID.pop(count)
+			gone = cloud_data.pop(count)
+			gone_id = cloud_id_data.pop(count)
 
-                # file = open("cloud.txt", "w")
-				with open("cloud.txt", "w") as f:
-					for line in cloud:
-						if line != gone:
-							# file.write(line)
-							# file.write("\n")
-							f.write(line)
-							f.write("\n")
-                # file.close()
+			# file = open("cloud.txt", "w")
+			with open("cloud.txt", "w") as f:
+				for line in cloud_data:
+					if line != gone:
+						# file.write(line)
+						# file.write("\n")
+						f.write(line)
+						f.write("\n")
+			# file.close()
 
-                # file = open("cloud id.txt", "w")
-				with open("cloud id.txt", "w") as f:
-					for line in cloudID:
-						if line != goneID:
-							# file.write(line)
-							# file.write("\n")
-							f.write(line)
-							f.write("\n")
-                # file.close()
-
-        else:
-            break
+			# file = open("cloud id.txt", "w")
+			with open("cloud id.txt", "w") as f:
+				for line in cloud_id_data:
+					if line != goneID:
+						# file.write(line)
+						# file.write("\n")
+						f.write(line)
+						f.write("\n")
+			# file.close()
+        # else:
+        #     break
 
 
 @client.event
