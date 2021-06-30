@@ -54,14 +54,14 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
+	print(f'{client.user.name} has connected to Discord!')
 
 # CODESTYLE: Use with blocks rather than file.open, file.do, file.close
     # file = open("cloud.txt", "r")
     # cloud = file.read().splitlines()
     # file.close()
 	with open("cloud.txt", "r") as file:
-	    cloud_data = file.read().splitlines()
+		cloud_data = file.read().splitlines()
 
     # file = open("cloud id.txt", "r")
     # cloudID = file.read().splitlines()
