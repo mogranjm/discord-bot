@@ -69,8 +69,8 @@ async def on_ready():
 	with open("cloud_id.txt", "r") as file:
 		could_id_data = file.read().splitlines()
 
-    files = next(os.walk("cloud"))[2]
-    channel = client.get_channel(857310481261133864)
+	files = next(os.walk("cloud"))[2]
+	channel = client.get_channel(857310481261133864)
 
     # count = 0
 	# loop=bool(True)    # CODESTYLE: this is the same as loop = True
