@@ -4,7 +4,7 @@ import discord
 import playsound
 # import winsound
 import bs4
-from environs import Env
+
 # from discord.ext import commands
 from discord.ext.commands import Bot
 from gtts import gTTS
@@ -16,26 +16,33 @@ from datetime import datetime
 from pathlib import Path
 import requests
 import math
-import os
 import random
 
+# Get Environment variables - replit enforces public repos, 
+# 	But you can define access private environment variables with os.getenv("VARNAME")
+# NEW
+if Path('.env').exists() is True:
+	from environs import Env
+	env = Env()
+	env.read_env('.environment')
+	TOKEN = env('DISCORD_TOKEN')
+	USER = env('USER')
+	CODE_CHANNEL = env("CODE_CHANNEL")
+	INSTAGRAM_USERNAME = env("INSTAGRAM_USERNAME")
+	INSTAGRAM_PASSWORD = env("INSTAGRAM_PASSWORD")
+else:
+	TOKEN = os.getenv('DISCORD_TOKEN')
+	USER = os.getenv('USER')
+	CODE_CHANNEL = os.getenv("CODE_CHANNEL")
+	INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME")
+	INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
+# DEPRECATED bc I prefer environs
+# load_dotenv("text.txt")
+
 BASE_DIR = Path(__file__).resolve()
+CLOUD_DIR = BASE_DIR/ "cloud"
 POLLS_DIR = BASE_DIR / "polls"
 SLEEP_DIR = BASE_DIR/ "sleep"
-# Get Environment variables
-# NEW
-env = Env()
-env.read_env('env.txt')
-TOKEN = env('DISCORD_TOKEN')
-USER = env('USER')
-CODE_CHANNEL = env("CODE_CHANNEL")
-INSTAGRAM_USERNAME = env("INSTAGRAM_USERNAME")
-INSTAGRAM_PASSWORD = env("INSTAGRAM_PASSWORD")
-# DEPRECATED
-# load_dotenv("text.txt")
-# TOKEN = os.getenv('DISCORD_TOKEN')
-# USER = os.getenv('USER')
-# CODE_CHANNEL = os.getenv("CODE_CHANNEL")
 
 # Selenium setup
 # DEPRECATED
@@ -50,6 +57,18 @@ bot = Bot("!")
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
+
+
+def read_boolfile(filename):
+	with open(filename, "r") as bool_file:
+		value = bool_file.read().strip()
+	
+	if value == "True":
+		return True
+	elif value == "False":
+		return False
+	else:
+		raise ValueError(".bool has been corrupted")
 
 
 @client.event
@@ -76,12 +95,15 @@ async def on_ready():
 	# loop=bool(True)    # CODESTYLE: this is the same as loop = True
 	# while loop ==True: # CODESTYLE: no need to define loop, you can just say "while True:"
 	# CODESTYLE: Use for-loop rather than while-loop with counter variable
+	cloud_list = []
+	cloud_id_list = []
 	for file in files:
         # if count < len(files):
 		# if files[count] not in cloud:
 		if file not in cloud_data:
-			sent = f'cloud/{file}'
-			item = await channel.send(file=discord.File(sent))
+			# sent = f'cloud/{file}'
+			# item = await channel.send(file=discord.File(sent))
+			item = await channel.send(file=discord.File(CLOUD_DIR / file))
 			item = str(item.id)
 
 # CODESTYLE: rather than opening and closing the file n times over the loop,
@@ -91,28 +113,37 @@ async def on_ready():
 			# file.write(item)
 			# file.write("\n")
 			# file.close()
-			with open("cloud_id.txt", "a") as f:
-				f.write(item)
-				f.write("\n")
+			# with open("cloud_id.txt", "a") as f:
+			# 	f.write(item)
+			# 	f.write("\n")
+			cloud_id_list.append(item)
 
 			# file = open("cloud.txt", "a")
 			# file.write(files[count])
 			# file.write("\n")
 			# file.close()
-			with open("cloud.txt", "a") as f:
-				f.write(item)
-				f.write("\n")
+			# with open("cloud.txt", "a") as f:
+			# 	f.write(file)
+			# 	f.write("\n")
                 # count = count + 1
-
+			cloud_list.append(file)
             # else:
             #     count = count + 1
 
         # else:
         #     break
+	with open("cloud.txt", "a") as file:
+		file.write("\n".join(cloud_list))
+
+	with open("cloud_id.txt", "a") as file:
+		file.write("\n".join(cloud_id_list))
+
     # count = 0
     # loop = bool(True)
     # while loop is True:
 	# CODESTYLE: Use for-loop with enumerate instead of while-loop + manual counter
+	cloud_list = []
+	cloud_id_list = []
 	for count, line in enumerate(cloud_data):
         # if count < len(cloud):
 		# if cloud[count] not in files:
@@ -124,47 +155,54 @@ async def on_ready():
 			gone_id = cloud_id_data.pop(count)
 
 			# file = open("cloud.txt", "w")
-			with open("cloud.txt", "w") as f:
-				for line in cloud_data:
-					if line != gone:
+			# with open("cloud.txt", "w") as f:
+				# for line in cloud_data:
+			if line != gone:
 						# file.write(line)
 						# file.write("\n")
-						f.write(line)
-						f.write("\n")
+						# f.write(line)
+						# f.write("\n")
+				cloud_list.append(line)
 			# file.close()
 
 			# file = open("cloud id.txt", "w")
-			with open("cloud id.txt", "w") as f:
-				for line in cloud_id_data:
-					if line != goneID:
+			# with open("cloud id.txt", "w") as f:
+			for line in cloud_id_data:
+				if line != gone_id:
 						# file.write(line)
 						# file.write("\n")
-						f.write(line)
-						f.write("\n")
+						# f.write(line)
+						# f.write("\n")
+					cloud_id_list.append(line)
 			# file.close()
         # else:
         #     break
+	with open("cloud.txt", "a") as file:
+		file.write("\n".join(cloud_list))
+
+	with open("cloud_id.txt", "a") as file:
+		file.write("\n".join(cloud_id_list))
 
 
 @client.event
 async def on_member_join(member):
-
     sys_channel = member.guild.system_channel
-    if sys_channel:
+    if sys_channel is not None:
         try:
             await sys_channel.send(
-                'Hey ' + member.mention + ' welcome to ' + member.guild.name +
-                '! To see all my functions, type "bot functions"!')
+                f'Hey {member.mention} welcome to {member.guild.name}!'
+				'To see all my functions, type "bot functions"!')
         except Exception as error:
             print(error)
 
 
 @client.event
 async def on_message(message):
-
-    TorF = open("torf.txt", "r")
-    on = TorF.read()
-    TorF.close()
+    # TorF = open("torf.txt", "r")
+	# file = open(".bool", "r")
+    # on = bool_file.read()
+    # TorF.close()
+	BOT_STATUS = read_boolfile('.bool')
 
     europe = ['EU', 'europe', 'Europe', 'eu']
     america = [
@@ -174,6 +212,8 @@ async def on_message(message):
 
     if message.author == client.user:
         return
+	if message.content.startswith("bot"):
+		await message.channel.send('')
 
     if len(message.content) == 6:
         if message.content == message.content.upper():
@@ -470,7 +510,7 @@ async def on_message(message):
             # with open(POLLS_DIR / "votes.txt", "w") as file:
             # 	file.write("")
             # file.close()
-			for file in os.listdir(POLLS_DIR):
+			for file in POLLS_DIR.iterdir():
 				with open(file, "w") as f:
 					f.write("")
 
