@@ -88,10 +88,10 @@ async def on_ready():
 	# cloudID = file.read().splitlines()
 	# file.close()
 	with open("cloud_id.txt", "r") as file:
-		could_id_data = file.read().splitlines()
+		cloud_id_data = file.read().splitlines()
 
 # TODO: Not quite sure what this does, could do the same with Path().iterdir()?
-	#  - depends whether cloud dir contains dirs?
+# Depends whether cloud dir contains dirs?
 	files = next(os.walk("cloud"))[2]
 	channel = client.get_channel(857310481261133864)
 
