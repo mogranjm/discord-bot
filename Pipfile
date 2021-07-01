@@ -9,6 +9,7 @@ selenium = "*"
 gtts = "*"
 pathlib = "*"
 environs = "*"
+playsound = "*"
 
 [dev-packages]
 
