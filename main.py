@@ -1,21 +1,22 @@
 # Dependency imports
-# from dotenv import load_dotenv)
+# from dotenv import load_dotenv
 import discord
-import playsound
+# import playsound
 # import winsound
-import bs4
+# import bs4
 
 # from discord.ext import commands
 from discord.ext.commands import Bot
 from gtts import gTTS
+from pathlib import Path
 from selenium import webdriver
 
 # Python standard imports
 from time import sleep
 from datetime import datetime
-from pathlib import Path
-import requests
+# import requests
 import math
+import os
 import random
 
 # Get Environment variables - replit enforces public repos, 
@@ -31,11 +32,12 @@ if Path('.env').exists() is True:
 	INSTAGRAM_USERNAME = env("INSTAGRAM_USERNAME")
 	INSTAGRAM_PASSWORD = env("INSTAGRAM_PASSWORD")
 else:
-	TOKEN = os.getenv('DISCORD_TOKEN')
-	USER = os.getenv('USER')
-	CODE_CHANNEL = os.getenv("CODE_CHANNEL")
-	INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME")
-	INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
+	from os import getenv
+	TOKEN = getenv('DISCORD_TOKEN')
+	USER = getenv('USER')
+	CODE_CHANNEL = getenv("CODE_CHANNEL")
+	INSTAGRAM_USERNAME = getenv("INSTAGRAM_USERNAME")
+	INSTAGRAM_PASSWORD = getenv("INSTAGRAM_PASSWORD")
 # DEPRECATED bc I prefer environs
 # load_dotenv("text.txt")
 
