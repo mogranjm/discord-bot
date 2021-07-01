@@ -202,15 +202,12 @@ async def on_member_join(member):
 async def on_message(message):
     # TorF = open("torf.txt", "r")
 	# file = open(".bool", "r")
-    # on = bool_file.read()
-    # TorF.close()
-	BOT_STATUS = read_boolfile('.bool')
+	# on = bool_file.read()
+	# TorF.close()
+	BOT_ENABLED = read_boolfile('.bool')
 
-    europe = ['EU', 'europe', 'Europe', 'eu']
-    america = [
-        'NA', 'na', 'america', 'America', 'north america', 'North america',
-        'north America', 'North America'
-    ]
+	europe = ['eu', 'europe']
+	america = ['na', 'america', 'north america']
 
     if message.author == client.user:
         return
@@ -238,8 +235,8 @@ async def on_message(message):
                             f'suspected among us code: {message.content}')
                         await channel.send(f'last recorded region: {region}')
 
-    if message.content in europe:
-        # file = open("lastRegion.txt", "w")
+	if message.content.lower() in europe:
+		# file = open("lastRegion.txt", "w")
 		with open("lastRegion.txt", "w") as file:
         	file.write("EU")
         # file.close()
@@ -260,18 +257,20 @@ async def on_message(message):
         await message.channel.send(
             f'Hey {author} dont forget to record your sleeping times!')
 
-    if "bot functions" in message.content and on is True:
-        response = (
-            'i am capable of:\nbot functions by typing: "BOT functions"random number generator by typing: "BOT rng"\ngetting the time for people in other time zones by typing "BOT current times"\ncreating polls by typing "bot create poll"+a list of the options\nvoting in a poll by typing "bot poll vote"+the number of the option you want to choose\nclosing a poll by typing "bot close poll"\ngetting your average sleep schedule by typing "bot sleep"\nsay something mean by typing "bot offend"\nautomatically send suspected among us codes to codes chat\nrecords last suspected among us region\n\ndeveloper only features:\nturning me on and off'
-        )
-        await message.channel.send(response)
+	# if "bot functions" in message.content and on is True:
+	if "bot functions" in message.content and BOT_ENABLED is True:
+		response = (
+			'i am capable of:\nbot functions by typing: "BOT functions"random number generator by typing: "BOT rng"\ngetting the time for people in other time zones by typing "BOT current times"\ncreating polls by typing "bot create poll"+a list of the options\nvoting in a poll by typing "bot poll vote"+the number of the option you want to choose\nclosing a poll by typing "bot close poll"\ngetting your average sleep schedule by typing "bot sleep"\nsay something mean by typing "bot offend"\nautomatically send suspected among us codes to codes chat\nrecords last suspected among us region\n\ndeveloper only features:\nturning me on and off'
+		)
+		await message.channel.send(response)
 
-    elif "bot rng" in message.content and on is True:
-        message.content = message.content.replace("bot rng", "")
-        if len(message.content) == 0 or message.content[0] == " " and len(
-                message.content) < 2:
-            response = "ERROR: please add perimeters for the random number"
-            await message.channel.send(response)
+	# elif "bot rng" in message.content and on is True:
+	elif "bot rng" in message.content and BOT_ENABLED is True:
+		message.content = message.content.replace("bot rng", "")
+		if len(message.content) == 0 or message.content[0] == " " and len(
+				message.content) < 2:
+			response = "ERROR: please add perimeters for the random number"
+			await message.channel.send(response)
 
         else:
             try:
@@ -287,40 +286,42 @@ async def on_message(message):
                 rng = 'ERROR: incorrect formatting. example: "bot rng 25,75"'
             await message.channel.send(rng)
 
-    elif "bot current times" in message.content and on is True:
-        now = datetime.now()
-        minute = now.strftime("%M")
-        england = now.strftime("%H")
-        england = int(england)
-        a = england + 9
-        if a > 23:
-            a = a - 24
-        israel = england + 2
-        if israel > 23:
-            israel = israel - 24
-        GandN = england + 1
-        if GandN == 24:
-            GandN = 0
-        c = england - 5
-        if c < 0:
-            c = c + 24
-        england = str(england)
-        israel = str(israel)
-        GandN = str(GandN)
-        c = str(c)
-        a = str(a)
-        response = str("Englands time is " + england + ":" + minute +
-                       "\nNetherlands and Germanys time is " + GandN + ":" +
-                       minute + "\nIsrael and Russias time is " + israel +
-                       ":" + minute + "\nCanadas time is " + c + ":" + minute +
-                       "\nAustralias time is " + a + ":" + minute)
+	# elif "bot current times" in message.content and on is True:
+	elif "bot current times" in message.content and BOT_ENABLED is True:
+		now = datetime.now()
+		minute = now.strftime("%M")
+		england = now.strftime("%H")
+		england = int(england)
+		a = england + 9
+		if a > 23:
+			a = a - 24
+		israel = england + 2
+		if israel > 23:
+			israel = israel - 24
+		GandN = england + 1
+		if GandN == 24:
+			GandN = 0
+		c = england - 5
+		if c < 0:
+			c = c + 24
+		england = str(england)
+		israel = str(israel)
+		GandN = str(GandN)
+		c = str(c)
+		a = str(a)
+		response = str("Englands time is " + england + ":" + minute +
+					   "\nNetherlands and Germanys time is " + GandN + ":" +
+					   minute + "\nIsrael and Russias time is " + israel +
+					   ":" + minute + "\nCanadas time is " + c + ":" + minute +
+					   "\nAustralias time is " + a + ":" + minute)
 
         response = response.replace("'", "")
         await message.channel.send(response)
 
-    elif "bot turn off" in message.content:
-        if on is True:
-            if message.author.id == 484893096761622554:
+	elif "bot turn off" in message.content:
+		# if on is True:
+		if BOT_ENABLED is True:
+			if message.author.id == 484893096761622554:
 				# TorF = open("torf.txt", "w+")
 				with open("torf.txt", "w+") as TorF:
                 	TorF.write("False")
@@ -333,10 +334,11 @@ async def on_message(message):
         else:
             await message.channel.send("im already off")
 
-    elif "bot turn on" in message.content:
-        if on is False:
-            if message.author.id == 484893096761622554:
-                # TorF = open("torf.txt", "w+")
+	elif "bot turn on" in message.content:
+		# if on is False:
+		if BOT_ENABLED is False:
+			if message.author.id == 484893096761622554:
+				# TorF = open("torf.txt", "w+")
 				with open("torf.txt", "w+") as TorF:
                 	TorF.write("True")
                 # TorF.close()
@@ -348,8 +350,9 @@ async def on_message(message):
         else:
             await message.channel.send("im already on")
 
-    elif "bot create poll" in message.content and on is True:
-        # currentPole = open("poll files/current_pole.txt", "r")
+	# elif "bot create poll" in message.content and on is True:
+	elif "bot create poll" in message.content and BOT_ENABLED is True:
+		# currentPole = open("poll files/current_pole.txt", "r")
 		with open(POLLS_DIR / "current_poll.txt", "r") as current_poll:
         	torf = current_poll.read()
         # currentPole.close()
@@ -396,8 +399,9 @@ async def on_message(message):
                 else:
                     break
 
-    elif "bot poll vote" in message.content and on is True:
-        # currentPole = open("poll files/current_pole.txt", "r")
+	# elif "bot poll vote" in message.content and on is True:
+	elif "bot poll vote" in message.content and BOT_ENABLED is True:
+		# currentPole = open("poll files/current_pole.txt", "r")
 		with open(POLLS_DIR / "current_poll.txt", "r") as current_poll:
         	torf = current_poll.read()
         # currentPole.close()
@@ -406,10 +410,10 @@ async def on_message(message):
             await message.channel.send("there is no poll currently open!")
         elif torf is True:
 
-            # alreadyVoted = open("poll files/already voted.txt")
-			with open(POLLS_DIR/ "voted.txt")
-            	voter = alreadyVoted.read().splitlines()
-            # alreadyVoted.close()
+			# alreadyVoted = open("poll files/already voted.txt")
+			with open(POLLS_DIR/ "voted.txt") as already_voted:
+				voter = already_voted.read().splitlines()
+			# alreadyVoted.close()
 
             message.author = str(message.author)
             author = message.author.split("#")[0]
